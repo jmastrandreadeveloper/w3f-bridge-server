@@ -3,6 +3,7 @@ W3F Bridge — Styled console output.
 """
 
 from __future__ import annotations
+import sys, io
 
 
 def print_banner(
@@ -13,6 +14,13 @@ def print_banner(
     version: str = "1.0.0",
 ) -> None:
     """Print a styled server banner to the console."""
+
+    # Fix Windows console encoding for box-drawing chars
+    if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
 
     url = f"ws://{host}:{port}"
     handler_count = len(handlers)
